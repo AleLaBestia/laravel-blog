@@ -47,13 +47,6 @@ class User extends Authenticatable
         return $this->hasMany('App\Post');
     }
 
-    public function hasAnyRole($roles){
-        if($this->roles()->whereIn('name',[$roles])->first()){
-            return true;
-        }else{
-            return false;
-        }
-    }
 
     public function hasRole($role){
         if($this->roles()->where('name',$role)->first()){
