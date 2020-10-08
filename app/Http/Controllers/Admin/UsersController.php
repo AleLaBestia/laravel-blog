@@ -2,50 +2,46 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Gate;
-use App\Role;
+
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Repositories\UserRepository;
+use App\Repositories\UserRepositoryInterface;
 
 class UsersController extends Controller
 {
-    private $userRepository;
+    
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct()
     {
         $this->middleware('auth');
-        $this->userRepository=$userRepository;
+        
     }
 
     public function index()
-    {   
-        
+    {           
         return view('admin.users.index')->with('users',$users);
     }
 
 
-    public function edit(User $user)
+    public function edit()
     {
-        
         return view('admin.users.edit')->with(['user'=>$user,'roles'=>$roles]);
     }
 
 
-    public function update(Request $request, User $user)
-    {
-        
-
+    public function update(Request $request, UserRepositoryInterface $user)
+    {   
+        $user->UpdateUser($request,$user);  
         return redirect()->route('admin.users.index');
     }
 
 
-    public function destroy(User $user)
+    public function destroy(Request $request,UserRepositoryInterface $user)
     {
-
-        $user->roles()->detach();
-        $user->delete();
+        $user->DeleteUser($request,$user);  
         return redirect()->route('admin.users.index');
     }
 }

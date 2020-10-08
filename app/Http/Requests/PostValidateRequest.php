@@ -21,7 +21,7 @@ class PostValidateRequest extends FormRequest
      *
      * @return array
      */
-    public function rules():array
+    public function rules()
     {
         return [
             'title'=>'required',

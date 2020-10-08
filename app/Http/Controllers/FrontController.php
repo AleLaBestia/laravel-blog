@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Post;
+use Illuminate\Http\Request;
+use App\Repositories\FrontControllerRepositoryInterface;
 
 class FrontController extends Controller
 {
-    public function index()
+    public function index(FrontControllerRepositoryInterface $posts)
     {
-        $posts=Post::orderBy('id','DESC')->paginate(8);
+        $posts->OrderById();
         return view('frontend',compact('posts'));
     }
 
-    public function post($slug)
+    public function post(FrontControllerRepositoryInterface $post, $slug)
     {
-        $post=Post::where('slug',$slug)->first();
+        $post->postSlug();
         return view('post',compact('post'));
     }
 }

@@ -1,16 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use App\Http\Requests\PostValidateRequest;
-use App\User;
-use Auth;
+
+
 use App\Post;
-use Session;
+use App\User;
 use Redirect;
-use App\Services\PostServices;
+use Illuminate\Http\Request;
+use App\Repositories\PostRepository;
+use App\Http\Requests\PostValidateRequest;
+use App\Repositories\PostRepositoryInterface;
 
 class PostController extends Controller
 {
@@ -29,36 +28,32 @@ class PostController extends Controller
     }
 
 
-    public function store( PostValidateRequest $request)
+    public function store( PostValidateRequest $request,PostRepositoryInterface $post )
     {
-        $post = new Post($request->all());
-        $post=(new PostServices)->UploadFile( $post, $request);
-        Session::flash('message','Post Created!!');
+        $post->storePost( $post, $request);
         return redirect()->route('posts.index') ;         
     }
 
   
     public function edit(Post $post)
     {
-       $post=(new UserRepository)->UpdateUser(Request $request, User $user)
+        
         return view('posts.edit',compact('post'));
     }
 
   
-    public function update(PostValidateRequest $request, Post $post)
+    public function update(PostValidateRequest $request, PostRepositoryInterface $post)
     {
         
-        $post=(new PostServices())->UploadFile( $post, $request);
-        Session::flash('message','Post updated!!');
+        $post->updatePost( $post, $request);
         return redirect()->route('posts.index') ;   
     }
 
 
-    public function destroy(Post $post)
+    public function destroy( PostRepositoryInterface $post,$id  )
     {
         
-        $post->delete();
-        Session::flash('message','deleted');
+        $post->deletePost($id);
         return redirect()->route('posts.index');
     }
 }
